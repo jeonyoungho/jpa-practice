@@ -15,24 +15,32 @@ public class JpaMain {
         tx.begin();
 
         try {
-            Notification notification = new Notification("test");
-            em.persist(notification);
+            Notification notificationWithSchedule = new Notification("create-with-schedule");
+            em.persist(notificationWithSchedule);
 
-            ScheduleInfo scheduleInfo = new ScheduleInfo(notification);
+            ScheduleInfo scheduleInfo = new ScheduleInfo(notificationWithSchedule);
             em.persist(scheduleInfo);
 
             em.flush();
             em.clear();
 
-            System.out.println("=====");
+            System.out.println("===========================================================");
 
             ScheduleInfo findScheduleInfo = em.find(ScheduleInfo.class, scheduleInfo.getId());
 
-            System.out.println("======");
+            System.out.println("===========================================================");
 
-            Notification findNotification = em.find(Notification.class, notification.getId());
+            Notification findNotification = em.find(Notification.class, notificationWithSchedule.getId());
 
             em.remove(findNotification);
+
+            em.flush();
+            em.clear();
+
+            System.out.println("===========================================================");
+
+            Notification notificationWithoutSchedule = new Notification("create-without-schedule");
+            em.persist(notificationWithoutSchedule);
 
             tx.commit();
         } catch (Exception e) {
